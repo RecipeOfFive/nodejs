@@ -1,0 +1,18 @@
+{
+  "name": "recipe",
+  "version": "1.0.0",
+  "description": "냉장고 파먹기 레레시피 서버",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pda",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.9.7",
+    "nodemon": "^3.1.0"
+  }
+}
