@@ -1,7 +1,8 @@
 const express = require("express");
-const pool = require("../common/data/dataConfig");
+const pool = require("../common/config/DataConfig");
 const router = express.Router();
 
+// 예시 api
 router.get("/", async (req, res) => {
   try {
     const connection = await pool.getConnection();
