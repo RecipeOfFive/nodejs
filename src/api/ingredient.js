@@ -2,11 +2,11 @@ const express = require("express");
 const pool = require("../common/data/dataConfig");
 const router = express.Router();
 
-router.get("/food/:foodId", async (req, res) => {
-  const foodId = req.params.foodId; // 파라미터에서 food ID를 받아옴
+router.get("/:id", async (req, res) => {
+  const id = req.params.id; // 파라미터에서 food ID를 받아옴
 
-  if (!foodId) {
-    return res.status(400).send({ message: "Food ID is required" });
+  if (!id) {
+    return res.status(400).json({ message: "Food ID is required" });
   }
 
   try {
@@ -14,18 +14,18 @@ router.get("/food/:foodId", async (req, res) => {
     const selectIngredientQuery = `
       SELECT ingredient
       FROM FOOD
-      WHERE food_id = ?
+      WHERE id = ?
       ORDER BY recipeOrder ASC
     `;
-    const [IngredientList] = await connection.query(selectIngredientQuery, [
-      foodId,
+    const [ingredientList] = await connection.query(selectIngredientQuery, [
+      id,
     ]);
     connection.release();
 
-    res.json(IngredientList); // JSON 형식으로 응답 반환
+    res.json(ingredientList); // JSON 형식으로 응답 반환
   } catch (e) {
     console.log(e);
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
