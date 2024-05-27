@@ -17,13 +17,12 @@ router.get("/food/:foodId", async (req, res) => {
       WHERE food_id = ?
       ORDER BY recipeOrder ASC
     `;
-    const [recipeIngredientList] = await connection.query(
-      selectIngredientQuery,
-      [foodId]
-    );
+    const [IngredientList] = await connection.query(selectIngredientQuery, [
+      foodId,
+    ]);
     connection.release();
 
-    res.json(recipeIngredientList); // JSON 형식으로 응답 반환
+    res.json(IngredientList); // JSON 형식으로 응답 반환
   } catch (e) {
     console.log(e);
     res.status(500).send({ message: "Internal Server Error" });
