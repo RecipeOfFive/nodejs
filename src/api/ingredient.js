@@ -1,5 +1,5 @@
 const express = require("express");
-const pool = require("../common/data/dataConfig");
+const pool = require("../common/config/dataConfig");
 const router = express.Router();
 
 router.get("/:id", async (req, res) => {
@@ -14,15 +14,13 @@ router.get("/:id", async (req, res) => {
     const selectIngredientQuery = `
       SELECT ingredient
       FROM FOOD
-      WHERE id = ?
-      ORDER BY recipeOrder ASC
-    `;
+      WHERE id = ?`;
     const [ingredientList] = await connection.query(selectIngredientQuery, [
       id,
     ]);
     connection.release();
 
-    res.json(ingredientList); // JSON 형식으로 응답 반환
+    res.json(ingredientList[0]); // JSON 형식으로 응답 반환
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Internal Server Error" });
