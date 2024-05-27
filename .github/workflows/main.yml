@@ -22,7 +22,7 @@ jobs:
           script: |
             cd /home/ubuntu/project-recipe/nodejs
             git pull origin main
-            pm2 stop all
-            npm install
+            pm2 kill
+            npm i --force
             npm run build
-            pm2 start dist/main.js
+            pm2 start src/server.js
