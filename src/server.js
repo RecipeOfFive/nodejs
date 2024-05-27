@@ -1,11 +1,14 @@
 const express = require("express");
 const foodRouter = require("./api/food");
+const { swaggerUi, specs } = require("./common/config/SwaggerConfig");
 
 const app = express();
 const port = 3000;
 
 app.use(express.json());
 app.use(`/api/food`, foodRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use((err, req, res, next) => {
   res.status(500);
