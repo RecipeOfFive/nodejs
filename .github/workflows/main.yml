@@ -14,14 +14,21 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" > .env
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
           echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env
           echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
           echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
           echo "DATABASE_DATABASE=${{ secrets.DATABASE_DATABASE }}" >> .env
 
       - name: Copy .env to remote server
-        run: scp -i ${{ secrets.REMOTE_PRIVATE_KEY }} -P ${{ secrets.REMOTE_SSH_PORT }} .env ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_IP }}:/home/ubuntu/project-recipe/nodejs/
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_IP }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          port: ${{ secrets.REMOTE_SSH_PORT }}
+          source: ".env"
+          target: "/home/ubuntu/project-recipe/nodejs/.env"
 
       - name: Execute remote SSH commands
         uses: appleboy/ssh-action@master
@@ -34,14 +41,6 @@ jobs:
             cd /home/ubuntu/project-recipe/nodejs
             git pull origin main
             pm2 kill
-            # Install NVM and Node.js on the remote server
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm install 22.0.0
-            nvm use 22.0.0
-            node -v
-            npm -v
             npm i --force
             npm run build
             pm2 start src/server.js
