@@ -126,6 +126,47 @@ router.get("/ingredient/:id", async (req, res) => {
 
 /**
  * @swagger
+ * paths:
+ *  /api/food/nutrient/{id}:
+ *    get:
+ *      summary: "음식 영양소 조회"
+ *      description: "foodId를 주면 그에 맞는 nutrient 반환"
+ *      tags: [Food]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *      responses:
+ *        "200":
+ *          description: 정상적인 영양소 반환
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                    ok:
+ *                      type: boolean
+ *                    users:
+ *                      type: object
+ *                      example:
+ *                          { "calorie": 1, "carbohydrate": 1, "protein": 1, "province": 1, "salt": 1 }
+ */
+router.get("/nutrient/:id", async (req, res) => {
+  const id = req.params.id; // 파라미터에서 food ID를 받아옴
+
+  const connection = await pool.getConnection();
+  const selectNutrientQuery = `
+      SELECT calorie, carbohydrate, protein, province, salt
+      FROM FOOD
+      WHERE id = ?`;
+  const [nutrientList] = await connection.query(selectNutrientQuery, [id]);
+  connection.release();
+
+  res.json(nutrientList[0]); // JSON 형식으로 응답 반환
+});
+
+/**
+ * @swagger
  *paths:
  *  /api/food:
  *    post:
