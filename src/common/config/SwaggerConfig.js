@@ -11,7 +11,10 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:3000", // 요청 URL
+        url: "http://recipeoffive.site",
+      },
+      {
+        url: "http://localhost:3000",
       },
     ],
   },
