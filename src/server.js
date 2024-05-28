@@ -3,10 +3,10 @@ const foodRouter = require("./api/food");
 const recipeRouter = require("./api/recipe");
 const { swaggerUi, specs } = require("./common/config/SwaggerConfig");
 const cors = require("cors");
-const whitelist = [
-  "http://localhost:3000",
-  "http://ec2-3-38-45-40.ap-northeast-2.compute.amazonaws.com:3000",
-];
+
+require("dotenv").config();
+
+const whitelist = ["http://localhost:3000", process.env.AWS_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {
