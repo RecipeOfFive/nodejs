@@ -121,7 +121,7 @@ router.get("/ingredient/:id", async (req, res) => {
  *        "200":
  *          description: 정상적인 요리 리스트 반환
  *          content:
- *            application/json:
+ *            application/json:g
  *              schema:
  *                type: object
  *                properties:
@@ -130,7 +130,7 @@ router.get("/ingredient/:id", async (req, res) => {
  *                    users:
  *                      type: object
  *                      example:
- *                          [ { "name": "알랄라", "mainImage": "http~~",  "description": "저감 뭐시기", "type": "끓이기", "likeCount": 1, "viewCount": 2, } ]
+ *                          [ { "id": 1, "name": "알랄라", "mainImage": "http~~",  "description": "저감 뭐시기", "type": "끓이기", "likeCount": 1, "viewCount": 2, } ]
  */
 router.post("/", async (req, res) => {
   const body = req.body;
@@ -140,7 +140,7 @@ router.post("/", async (req, res) => {
   const order = body.order;
 
   const connection = await pool.getConnection();
-  let selectFoodListQuery = `SELECT name, main_image, description, type, like_count, view_count FROM FOOD`;
+  let selectFoodListQuery = `SELECT id, name, main_image, description, type, like_count, view_count FROM FOOD`;
 
   if (
     (include && include.length > 0) ||
