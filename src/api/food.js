@@ -121,7 +121,7 @@ router.get("/ingredient/:id", async (req, res) => {
  *        "200":
  *          description: 정상적인 요리 리스트 반환
  *          content:
- *            application/json:g
+ *            application/json:
  *              schema:
  *                type: object
  *                properties:
