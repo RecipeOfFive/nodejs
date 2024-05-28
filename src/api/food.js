@@ -54,6 +54,38 @@ router.get("/:id", async (req, res) => {
 /**
  * @swagger
  * paths:
+ *  /api/food/like/{id}:
+ *    get:
+ *      summary: "좋아요 수 올리기"
+ *      description: "foodId를 주면 그 요리의 좋아요 수 count 증가"
+ *      tags: [Food]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *      responses:
+ *        "204":
+ *          description: 정상적으로 좋아요 수가 올라감
+ */
+router.get("/like/:id", async (req, res) => {
+  const id = req.params.id; // 파라미터에서 food ID를 받아옴
+
+  const connection = await pool.getConnection();
+  const updateLikeCountQuery = `
+    UPDATE FOOD
+    SET like_count = like_count + 1
+    WHERE id = ?
+  `;
+  await connection.query(updateLikeCountQuery, [id]);
+
+  connection.release();
+
+  res.sendStatus(204).end();
+});
+
+/**
+ * @swagger
+ * paths:
  *  /api/food/ingredient/{id}:
  *    get:
  *      summary: "레시피 재료 조회"
