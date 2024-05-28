@@ -27,14 +27,14 @@ const router = express.Router();
  *                    users:
  *                      type: object
  *                      example:
- *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요" }
+ *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요", "like_count": 7, "view_count": 5 }
  */
 router.get("/:id", async (req, res) => {
   const id = req.params.id; // 파라미터에서 food ID를 받아옴
 
   const connection = await pool.getConnection();
   const selectFoodDetailQuery = `
-      SELECT name, main_image, description
+      SELECT name, main_image, description, like_count, view_count
       FROM FOOD
       WHERE id = ?`;
   const [foodDetail] = await connection.query(selectFoodDetailQuery, [id]);
