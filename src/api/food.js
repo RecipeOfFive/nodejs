@@ -27,20 +27,60 @@ const router = express.Router();
  *                    users:
  *                      type: object
  *                      example:
- *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요" }
+ *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요", "like_count": 7, "view_count": 5 }
  */
 router.get("/:id", async (req, res) => {
   const id = req.params.id; // 파라미터에서 food ID를 받아옴
 
   const connection = await pool.getConnection();
   const selectFoodDetailQuery = `
-      SELECT name, main_image, description
+      SELECT name, main_image, description, like_count, view_count
       FROM FOOD
       WHERE id = ?`;
   const [foodDetail] = await connection.query(selectFoodDetailQuery, [id]);
+
+  const updateViewCountQuery = `
+    UPDATE FOOD
+    SET view_count = view_count + 1
+    WHERE id = ?
+  `;
+  await connection.query(updateViewCountQuery, [id]);
+
   connection.release();
 
   res.json(foodDetail[0]); // JSON 형식으로 응답 반환
+});
+
+/**
+ * @swagger
+ * paths:
+ *  /api/food/like/{id}:
+ *    get:
+ *      summary: "좋아요 수 올리기"
+ *      description: "foodId를 주면 그 요리의 좋아요 수 count 증가"
+ *      tags: [Food]
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          required: true
+ *      responses:
+ *        "204":
+ *          description: 정상적으로 좋아요 수가 올라감
+ */
+router.get("/like/:id", async (req, res) => {
+  const id = req.params.id; // 파라미터에서 food ID를 받아옴
+
+  const connection = await pool.getConnection();
+  const updateLikeCountQuery = `
+    UPDATE FOOD
+    SET like_count = like_count + 1
+    WHERE id = ?
+  `;
+  await connection.query(updateLikeCountQuery, [id]);
+
+  connection.release();
+
+  res.sendStatus(204).end();
 });
 
 /**
