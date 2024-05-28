@@ -7,7 +7,7 @@ const cors = require("cors");
 
 require("dotenv").config();
 
-const whitelist = ["http://localhost:3000", process.env.AWS_URL];
+const whitelist = ["http://localhost:3001", process.env.AWS_URL];
 
 const corsOptions = {
   origin: function (origin, callback) {
