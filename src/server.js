@@ -26,6 +26,19 @@ const port = 3000;
 app.use(express.json());
 app.use(cors(corsOptions));
 
+app.use(
+  express.static(
+    path.join(
+      __dirname,
+      "..",
+      "..",
+      "react",
+      "recipe_of_five_front",
+      "build",
+      "static"
+    )
+  )
+);
 app.get("/", function (req, res) {
   res.sendFile(
     path.join(
