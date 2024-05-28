@@ -84,4 +84,106 @@ router.get("/ingredient/:id", async (req, res) => {
   res.json(ingredientList[0]); // JSON 형식으로 응답 반환
 });
 
+/**
+ * @swagger
+ *paths:
+ *  /api/food:
+ *    post:
+ *      summary: "요리 리스트 조회"
+ *      description: "필터링에 맞추어 해당하는 요리 리스트 반환 (include, exclude, type은 없으면 빈배열로 요청)"
+ *      tags:
+ *        - "Food"
+ *      parameters:
+ *        - in: "body"
+ *          name: "body"
+ *          description: "필터링 조건"
+ *          required: true
+ *          schema:
+ *            type: object
+ *            required:
+ *              - order
+ *            properties:
+ *              order:
+ *                type: string
+ *              include:
+ *                type: array
+ *                items:
+ *                  type: string
+ *              exclude:
+ *                type: array
+ *                items:
+ *                  type: string
+ *              type:
+ *                type: array
+ *                items:
+ *                  type: string
+ *      responses:
+ *        "200":
+ *          description: 정상적인 요리 리스트 반환
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                    ok:
+ *                      type: boolean
+ *                    users:
+ *                      type: object
+ *                      example:
+ *                          [ { "name": "알랄라", "mainImage": "http~~",  "description": "저감 뭐시기", "type": "끓이기", "likeCount": 1, "viewCount": 2, } ]
+ */
+router.post("/", async (req, res) => {
+  const body = req.body;
+  const include = body.include;
+  const exclude = body.exclude;
+  const type = body.type;
+  const order = body.order;
+
+  const connection = await pool.getConnection();
+  let selectFoodListQuery = `SELECT name, main_image, description, type, like_count, view_count FROM FOOD`;
+
+  if (
+    (include && include.length > 0) ||
+    (exclude && exclude.length > 0) ||
+    (type && type.length > 0)
+  ) {
+    selectFoodListQuery += ` WHERE`;
+
+    let whereConditions = [];
+
+    if (include && include.length > 0) {
+      const includeConditions = include.map(
+        (ingredient) => `ingredient LIKE '%${ingredient}%'`
+      );
+      whereConditions.push(`(${includeConditions.join(" AND ")})`);
+    }
+
+    if (exclude && exclude.length > 0) {
+      const excludeConditions = exclude.map(
+        (ingredient) => `ingredient NOT LIKE '%${ingredient}%'`
+      );
+      whereConditions.push(`(${excludeConditions.join(" AND ")})`);
+    }
+
+    if (type && type.length > 0) {
+      const typeCondition = `type IN (${type.map((t) => `'${t}'`).join(",")})`;
+      whereConditions.push(`(${typeCondition})`);
+    }
+
+    selectFoodListQuery += ` ${whereConditions.join(" AND ")}`;
+  }
+
+  if (order) {
+    selectFoodListQuery += ` ORDER BY ${order} DESC`;
+  }
+
+  selectFoodListQuery += ` LIMIT 9`;
+
+  console.log(selectFoodListQuery);
+  const [foodList] = await connection.query(selectFoodListQuery);
+  connection.release();
+
+  res.json(foodList);
+});
+
 module.exports = router;
