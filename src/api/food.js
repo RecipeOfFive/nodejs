@@ -38,6 +38,14 @@ router.get("/:id", async (req, res) => {
       FROM FOOD
       WHERE id = ?`;
   const [foodDetail] = await connection.query(selectFoodDetailQuery, [id]);
+
+  const updateViewCountQuery = `
+    UPDATE FOOD
+    SET view_count = view_count + 1
+    WHERE id = ?
+  `;
+  await connection.query(updateViewCountQuery, [id]);
+
   connection.release();
 
   res.json(foodDetail[0]); // JSON 형식으로 응답 반환
