@@ -1,6 +1,7 @@
 const express = require("express");
 const foodRouter = require("./api/food");
 const recipeRouter = require("./api/recipe");
+const path = require("path");
 const { swaggerUi, specs } = require("./common/config/SwaggerConfig");
 const cors = require("cors");
 
