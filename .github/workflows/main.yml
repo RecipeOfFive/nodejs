@@ -19,12 +19,14 @@ jobs:
           echo "DATABASE_USER=$DATABASE_USER" >> .env
           echo "DATABASE_PASSWORD=$DATABASE_PASSWORD" >> .env
           echo "DATABASE_DATABASE=$DATABASE_DATABASE" >> .env
+          echo "AWS_URL=$AWS_URL" >> .env
         env:
           DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
           DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
           DATABASE_USER: ${{ secrets.DATABASE_USER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
           DATABASE_DATABASE: ${{ secrets.DATABASE_DATABASE }}
+          AWS_URL: ${{ secrets.AWS_URL }}
 
       - name: Copy .env to remote server
         uses: appleboy/scp-action@master
