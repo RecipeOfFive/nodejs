@@ -28,17 +28,10 @@ app.use(cors(corsOptions));
 
 app.use(
   express.static(
-    path.join(
-      __dirname,
-      "..",
-      "..",
-      "react",
-      "recipe_of_five_front",
-      "build",
-      "static"
-    )
+    path.join(__dirname, "..", "..", "react", "recipe_of_five_front", "build")
   )
 );
+
 app.get("/", function (req, res) {
   res.sendFile(
     path.join(
