@@ -27,14 +27,14 @@ const router = express.Router();
  *                    users:
  *                      type: object
  *                      example:
- *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요", "like_count": 7, "view_count": 5 }
+ *                          { "name": "새우두부계란찜", "main_iamge": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_00028_2.png", "description": "맛있는 새우두부계란찜이예요", "like_count": 7, "view_count": 5, "kind": "밥", "hashtag": "순두부" }
  */
 router.get("/:id", async (req, res) => {
   const id = req.params.id; // 파라미터에서 food ID를 받아옴
 
   const connection = await pool.getConnection();
   const selectFoodDetailQuery = `
-      SELECT name, main_image, description, like_count, view_count
+      SELECT name, main_image, description, like_count, view_count, kind, hashtag
       FROM FOOD
       WHERE id = ?`;
   const [foodDetail] = await connection.query(selectFoodDetailQuery, [id]);
@@ -211,7 +211,7 @@ router.get("/nutrient/:id", async (req, res) => {
  *                    users:
  *                      type: object
  *                      example:
- *                          [ { "id": 1, "name": "알랄라", "mainImage": "http~~",  "description": "저감 뭐시기", "type": "끓이기", "likeCount": 1, "viewCount": 2, "kind": "밥", "hashtag": "순두부" } ]
+ *                          [ { "id": 1, "name": "알랄라", "mainImage": "http~~",  "description": "저감 뭐시기", "type": "끓이기", "likeCount": 1, "viewCount": 2 } ]
  */
 router.post("/", async (req, res) => {
   const body = req.body;
@@ -221,7 +221,7 @@ router.post("/", async (req, res) => {
   const order = body.order;
 
   const connection = await pool.getConnection();
-  let selectFoodListQuery = `SELECT id, name, main_image, description, type, like_count, view_count, kind, hashtag FROM FOOD`;
+  let selectFoodListQuery = `SELECT id, name, main_image, description, type, like_count, view_count FROM FOOD`;
 
   if (
     (include && include.length > 0) ||
