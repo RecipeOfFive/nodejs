@@ -46,6 +46,20 @@ app.get("/", function (req, res) {
   );
 });
 
+app.get("/detail/*", function (req, res) {
+  res.sendFile(
+    path.join(
+      __dirname,
+      "..",
+      "..",
+      "react",
+      "recipe_of_five_front",
+      "build",
+      "index.html"
+    )
+  );
+});
+
 app.use(`/api/food`, foodRouter);
 app.use(`/api/recipe`, recipeRouter);
 
