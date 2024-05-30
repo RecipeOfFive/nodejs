@@ -31,20 +31,20 @@ const router = express.Router();
  */
 router.get("/:id", async (req, res) => {
   const id = req.params.id; // 파라미터에서 food ID를 받아옴
-
   const connection = await pool.getConnection();
+
+  const updateViewCountQuery = `
+  UPDATE FOOD
+  SET view_count = view_count + 1
+  WHERE id = ?
+  `;
+  await connection.query(updateViewCountQuery, [id]);
+
   const selectFoodDetailQuery = `
       SELECT name, main_image, description, like_count, view_count, type, kind, hashtag
       FROM FOOD
       WHERE id = ?`;
   const [foodDetail] = await connection.query(selectFoodDetailQuery, [id]);
-
-  const updateViewCountQuery = `
-    UPDATE FOOD
-    SET view_count = view_count + 1
-    WHERE id = ?
-  `;
-  await connection.query(updateViewCountQuery, [id]);
 
   connection.release();
 
